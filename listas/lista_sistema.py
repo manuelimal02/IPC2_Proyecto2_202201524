@@ -31,7 +31,7 @@ class lista_doble_sistema:
         print("----------------")
         while actual:
             # Imprimimos el objeto del nodo actual
-            print("Nombre Sistema:", actual.sistema.nombre, "Altura Máxima Sistema:", actual.sistema.altura, "Cantidad Drones:", actual.sistema.cantidad)
+            print("Nombre Sistema:", actual.sistema.nombre_sistema, "Altura Máxima Sistema:", actual.sistema.altura_sistema, "Cantidad Drones:", actual.sistema.cantidad_drones)
             actual.sistema.lista_contenido.mostrar_contenido()
             # Avanzamos al siguiente nodo  
             actual = actual.siguiente 

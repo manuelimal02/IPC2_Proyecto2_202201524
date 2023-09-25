@@ -21,6 +21,7 @@ from objetos.instruccion import instruccion
 
 #Listas Globales 
 lista_drones_temporal = lista_doble_dron()
+
 lista_sistema_temporal = lista_doble_sistema()
 lista_mensaje_temporal = lista_doble_mensaje()
 
@@ -54,15 +55,18 @@ class ventana_principal:
 
 
     def cargar_archivo(self):
-        ruta = tk.Tk()
-        ruta.withdraw()
-        ruta.attributes('-topmost', True)
+            ruta = tk.Tk()
+            ruta.withdraw()
+            ruta.attributes('-topmost', True)
 
-        try:
+        #try:
             ruta_archivo = filedialog.askopenfilename(filetypes=[("Archivos XML", f"*.xml")])
+
             with open(ruta_archivo, "r") as archivo:
                 tree = ET.parse(ruta_archivo)
                 root = tree.getroot()
+
+
                 #Lista Drones
                 nivel_drones = root.find('.//listaDrones')
                 for drones in nivel_drones.findall('.//dron'):
@@ -93,6 +97,7 @@ class ventana_principal:
                     lista_sistema_temporal.insertar_sistema(nuevo_sistema)
                 lista_sistema_temporal.mostrar_sistema()
 
+
             # Encuentra la sección <listaMensajes>
             lista_mensajes = root.find('.//listaMensajes')
             for nivel_mensaje in lista_mensajes.findall('.//Mensaje'):
@@ -111,13 +116,15 @@ class ventana_principal:
                 lista_mensaje_temporal.insertar_mensaje(nuevo_mensaje)
             lista_mensaje_temporal.mostrar_mensaje()
 
-            messagebox.showinfo("Abrir", "Archivo Cargado Correctamente.")
-        except Exception as e:
-            messagebox.showerror("Error", f"No se ha seleccionado ningún archivo: {str(e)}")
-            return
+            lista_mensaje_temporal.comparar(lista_sistema_temporal)
+            
 
-    def procesar_archivo():
-        print("Prueba")
+
+            messagebox.showinfo("Abrir", "Archivo Cargado Correctamente.")
+        #except Exception as e:
+            #messagebox.showerror("Error", f"No se ha seleccionado ningún archivo: {str(e)}")
+            #return
+
 
 
 if __name__ == "__main__":

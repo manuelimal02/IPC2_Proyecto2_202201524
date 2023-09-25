@@ -34,5 +34,6 @@ class lista_doble_instruccion:
             print("Nombre:", actual.instruccion.nombre_dron, "Altura:", actual.instruccion.altura_dron)
             # Avanzamos al siguiente nodo  
             actual = actual.siguiente 
+            
             # Imprimimos "None" al final para indicar el final de la lista
         print("----------------")

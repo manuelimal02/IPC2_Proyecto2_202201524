@@ -31,10 +31,42 @@ class lista_doble_mensaje:
         print("----------------")
         while actual:
             # Imprimimos el objeto del nodo actual
-            print("Nombre Sistema:", actual.mensaje.nombre, "Sistema Dron:", actual.mensaje.sistema_dron)
+            print("Nombre Sistema:", actual.mensaje.nombre_mensaje, "Sistema Dron:", actual.mensaje.nombre_sistema_dron)
             print(" ")
             actual.mensaje.lista_instruccion.mostrar_instruccion()
             # Avanzamos al siguiente nodo  
             actual = actual.siguiente 
             # Imprimimos "None" al final para indicar el final de la lista
         print("----------------")
+
+
+    def comparar(self, lista_sistema):
+            nodo_mensaje = self.cabeza
+            while nodo_mensaje is not None:
+                #El Mensaje que se está Procesando
+                print(nodo_mensaje.mensaje.nombre_mensaje)
+                nodo_sistema = lista_sistema.cabeza
+                while nodo_sistema is not None:
+                    #Si el nombre_sistema_dron de mensaje es igual al nombre sistema del sistema 
+                    if nodo_mensaje.mensaje.nombre_sistema_dron == nodo_sistema.sistema.nombre_sistema:
+                        #Se recorren las instrucciones del mensaje actual
+                        print("----------")
+                        nodo_instruccion = nodo_mensaje.mensaje.lista_instruccion.cabeza
+                        while nodo_instruccion is not None:
+                            
+                            nodo_contenido = nodo_sistema.sistema.lista_contenido.cabeza
+                            while nodo_contenido is not None:
+                                if nodo_instruccion.instruccion.nombre_dron == nodo_contenido.contenido.nombre_dron and nodo_instruccion.instruccion.altura_dron == nodo_contenido.contenido.altura_dron:
+                                    print(nodo_contenido.contenido.simbolo_altura)
+                                    break
+                                else:
+                                    nodo_contenido = nodo_contenido.siguiente
+                            nodo_instruccion = nodo_instruccion.siguiente
+                        break
+                    else:
+                        nodo_sistema=nodo_sistema.siguiente
+
+                nodo_mensaje=nodo_mensaje.siguiente
+            return True
+
+
