@@ -1,4 +1,4 @@
-from listas.nodo_contenido import nodo_contenido
+from nodos.nodo_contenido import nodo_contenido
 
 class lista_doble_contenido:
 
@@ -32,7 +32,7 @@ class lista_doble_contenido:
         print("---------")
         while actual:
             # Imprimimos el objeto del nodo actual
-            print("Nombre Dron:", actual.contenido.nombre_dron, "Altura:", actual.contenido.altura_dron, "Simbolo:", actual.contenido.simbolo_altura)
+            print("Altura:", actual.contenido.altura_dron, "Simbolo:", actual.contenido.simbolo_altura)
             # Avanzamos al siguiente nodo  
             actual = actual.siguiente 
             # Imprimimos "None" al final para indicar el final de la lista

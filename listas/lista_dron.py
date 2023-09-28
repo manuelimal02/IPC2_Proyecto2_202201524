@@ -1,4 +1,4 @@
-from listas.nodo_dron import nodo_dron
+from nodos.nodo_dron import nodo_dron
 
 class lista_doble_dron:
 
@@ -31,7 +31,8 @@ class lista_doble_dron:
         print("----------------")
         while actual:
             # Imprimimos el objeto del nodo actual
-            print(actual.dron.nombre)
+            print(actual.dron.nombre_dron)
+            actual.dron.lista_contenido.mostrar_contenido()
             # Avanzamos al siguiente nodo  
             actual = actual.siguiente 
             # Imprimimos "None" al final para indicar el final de la lista

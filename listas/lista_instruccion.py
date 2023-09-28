@@ -1,4 +1,4 @@
-from listas.nodo_instruccion import nodo_instruccion
+from nodos.nodo_instruccion import nodo_instruccion
 
 class lista_doble_instruccion:
 

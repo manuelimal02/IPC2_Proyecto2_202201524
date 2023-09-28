@@ -1,4 +1,4 @@
-from listas.nodo_mensaje import nodo_mensaje
+from nodos.nodo_mensaje import nodo_mensaje
 
 class lista_doble_mensaje:
 
@@ -29,6 +29,7 @@ class lista_doble_mensaje:
         # Comenzamos desde la cabeza
         actual = self.cabeza  
         print("----------------")
+        print("Esta es la lista mensajes")
         while actual:
             # Imprimimos el objeto del nodo actual
             print("Nombre Sistema:", actual.mensaje.nombre_mensaje, "Sistema Dron:", actual.mensaje.nombre_sistema_dron)
@@ -38,29 +39,65 @@ class lista_doble_mensaje:
             actual = actual.siguiente 
             # Imprimimos "None" al final para indicar el final de la lista
         print("----------------")
+    
+    def inicializar_lista_mensaje(self):
+        # Comenzamos desde la cabeza
+        actual = self.cabeza
+        while actual:
+            # Guarda una referencia al siguiente nodo
+            siguiente = actual.siguiente
+            # Elimina el nodo actual  
+            del actual 
+            # Avanza al siguiente nodo 
+            actual = siguiente
+        # Después de eliminar todos los nodos, la lista está vacía  
+        self.cabeza = None
+        self.cola = None  
 
 
     def comparar(self, lista_sistema):
             nodo_mensaje = self.cabeza
+            #Se Recorren Todos Los Mensajes
             while nodo_mensaje is not None:
-                #El Mensaje que se está Procesando
                 print(nodo_mensaje.mensaje.nombre_mensaje)
                 nodo_sistema = lista_sistema.cabeza
+                #Se Recorren Los Sistemas Para encontrar Una Coincidencia
                 while nodo_sistema is not None:
                     #Si el nombre_sistema_dron de mensaje es igual al nombre sistema del sistema 
                     if nodo_mensaje.mensaje.nombre_sistema_dron == nodo_sistema.sistema.nombre_sistema:
-                        #Se recorren las instrucciones del mensaje actual
-                        print("----------")
+                        print("---------------------------------")
                         nodo_instruccion = nodo_mensaje.mensaje.lista_instruccion.cabeza
+                        #Se recorren las instrucciones del mensaje actual
                         while nodo_instruccion is not None:
-                            
-                            nodo_contenido = nodo_sistema.sistema.lista_contenido.cabeza
-                            while nodo_contenido is not None:
-                                if nodo_instruccion.instruccion.nombre_dron == nodo_contenido.contenido.nombre_dron and nodo_instruccion.instruccion.altura_dron == nodo_contenido.contenido.altura_dron:
-                                    print(nodo_contenido.contenido.simbolo_altura)
+                            nodo_dron = nodo_sistema.sistema.lista_dron.cabeza
+                            #Se recorren la lista de dron para buscar el nombre_dron 
+                            while nodo_dron is not None:
+                                #Si el nombre_dron de la instruccion es igual al nombre_dron del dron
+                                if nodo_instruccion.instruccion.nombre_dron == nodo_dron.dron.nombre_dron:
+                                    nodo_contenido = nodo_dron.dron.lista_contenido.cabeza
+                                    print("----")
+                                    print(nodo_dron.dron.nombre_dron)
+                                    print("----")
+                                    contador_altura=0
+                                    emitir_luz=False
+                                    while nodo_contenido is not None:
+                                        if nodo_instruccion.instruccion.altura_dron == nodo_contenido.contenido.altura_dron:
+                                            contador_altura+=1
+                                            emitir_luz=True
+                                            print("Emitir Luz, "+ nodo_contenido.contenido.simbolo_altura + " Altura: "+ str(contador_altura))
+                                        else:
+                                            contador_altura+=1
+                                            if emitir_luz:
+                                                print("Esperar, Altura: "+ str(contador_altura))
+                                            else:
+                                                print("Subir, Altura: "+ str(contador_altura))
+                                            nodo_contenido.siguiente
+                                        nodo_contenido=nodo_contenido.siguiente
+                                    
                                     break
                                 else:
-                                    nodo_contenido = nodo_contenido.siguiente
+                                    nodo_dron = nodo_dron.siguiente
+
                             nodo_instruccion = nodo_instruccion.siguiente
                         break
                     else:
