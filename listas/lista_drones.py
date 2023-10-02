@@ -1,5 +1,4 @@
 # Importa tkinter
-from tkinter import messagebox
 import tkinter as tk  
 # Importa el nodo
 from nodos.nodo_drones import nodo_dron

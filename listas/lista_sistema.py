@@ -41,22 +41,22 @@ class lista_doble_sistema:
     def graficar_sistema_drones(self):
         actual = self.cabeza
         while actual is not None:
-            nombre_sistema=actual.sistema.nombre_sistema
-            altura_sistema=actual.sistema.altura_sistema
-            cantidad_drones=actual.sistema.cantidad_drones
-            f = open(nombre_sistema+'.dot','w')
+            nombre=actual.sistema.nombre_sistema
+            altura=actual.sistema.altura_sistema
+            cantidad=actual.sistema.cantidad_drones
+            f = open(nombre+'.dot','w')
             texto="""
                 digraph G {bgcolor="#0000FF44:#FF000044" gradientangle=90
-                subgraph cluster_3 {fillcolor="cyan:blue" style="filled" gradientangle="270"
-                    node [ style=filled,shape="box",fillcolor="cyan" ]"Altura: """+altura_sistema+"""";
-                    node [ style=filled,shape="box",fillcolor="cyan" ]"Cantidad Drones: """+cantidad_drones+"""";
-                    label="Sistema: """+nombre_sistema+""""
+                subgraph cluster_0 {fillcolor="cyan:blue" style="filled" gradientangle="270"
+                    node [ style=filled,shape="box",fillcolor="cyan" ]"Altura Maxima: """+altura+"""";
+                    node [ style=filled,shape="box",fillcolor="cyan" ]"Cantidad Drones: """+cantidad+"""";
+                    label=" """+nombre+""""
                     }
                 a0 [shape=none label=<
                 <TABLE border="0" cellspacing="10" cellpadding="10">\n
-                <TR><TD bgcolor="#085879" gradientangle="315">Altura(mts)</TD>\n"""
+                <TR><TD bgcolor="#085879" gradientangle="315">Altura</TD>\n"""
             contador_altura=1
-            while int(altura_sistema)>=contador_altura:
+            while int(altura)>=contador_altura:
                 texto+="""<TD style="radial" bgcolor="#65BABF" gradientangle="60">"""+str(contador_altura)+"""</TD>\n"""
                 contador_altura+=1
             texto+="""</TR>"""
@@ -76,8 +76,9 @@ class lista_doble_sistema:
             f.write(texto)
             f.close()
             os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin'
-            os.system(f'dot -Tpdf {nombre_sistema}.dot -o sistema_dron_{nombre_sistema}.pdf')
+            os.system(f'dot -Tpdf {nombre}.dot -o sistema_dron_{nombre}.pdf')
             actual=actual.siguiente
+
             
 
     def inicializar_lista_sistema(self):

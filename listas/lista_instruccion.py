@@ -1,3 +1,6 @@
+# Importa tkinter
+import tkinter as tk
+
 from nodos.nodo_instruccion import nodo_instruccion
 
 class lista_doble_instruccion:
@@ -37,3 +40,14 @@ class lista_doble_instruccion:
             
             # Imprimimos "None" al final para indicar el final de la lista
         print("----------------")
+
+    def mostrar_instruccion_pantalla(self,scrolled_text):        
+        # Comenzamos desde la cabeza de la lista
+        actual = self.cabeza
+        scrolled_text.insert(tk.END, "Instrucciones Del Mensaje:"+'\n'+'\n')  
+        while actual:
+            # Agrega el nombre del mensaje al scrolledtext
+            scrolled_text.insert(tk.END, "Nombre Dron: "+ actual.instruccion.nombre_dron +" -- "+"Altura: "+ actual.instruccion.altura_dron+ '\n')
+            # Avanzamos al siguiente nodo
+            actual = actual.siguiente
+        scrolled_text.insert(tk.END,'\n')  
