@@ -36,7 +36,6 @@ class lista_drones:
             actual.siguiente = nuevo_nodo
             nuevo_nodo.anterior = actual
 
-
     def mostrar_drones_pantalla(self, scrolled_text):
         #Borra El Contenido Actual
         scrolled_text.delete(1.0, tk.END)  
@@ -45,7 +44,6 @@ class lista_drones:
             #Agrega el nombre del dron
             scrolled_text.insert(tk.END, actual.dron.nombre + '\n')  
             actual = actual.siguiente
-
 
     def mostrar_drones(self):
         actual = self.cabeza

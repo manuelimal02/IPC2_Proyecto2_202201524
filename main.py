@@ -9,6 +9,7 @@ from tkinter import messagebox
 from tkinter import filedialog
 from tkinter import Label
 from tkinter import Entry
+
 #Lista Doble Enlazada
 from listas.lista_dron import lista_doble_dron
 from objetos.dron import dron
@@ -26,20 +27,23 @@ from listas.lista_mensaje import lista_doble_mensaje
 from objetos.mensaje import mensaje
 
 from listas.lista_mensaje_recibido import lista_doble_mensaje_recibido
+from objetos.mensaje_recibido import mensaje_recibido
 
+from listas.lista_dron_recibido import lista_doble_dron_recibido
+from objetos.dron_recibido import dron_recibido
+
+from listas.lista_instruccion_dron import lista_doble_instruccion_dron
+from objetos.instruccion_dron import instruccion_dron
 
 from listas.lista_instruccion import lista_doble_instruccion
 from objetos.instruccion import instruccion
 
-
-#Listas Globales 
+#Lista Global Par XML Entrada
 lista_drones_general = lista_drones()
 lista_sistema_general= lista_doble_sistema()
 lista_mensaje_general = lista_doble_mensaje()
-
+#Lista Global Par XML Salida
 lista_mensaje_recibido_general = lista_doble_mensaje_recibido()
-
-
 
 class ventana_principal:
     #Al Pasar Por El Botón
@@ -64,7 +68,7 @@ class ventana_principal:
         self.boton_cargar.bind("<Enter>", self.on_enter)
         self.boton_cargar.bind("<Leave>", self.on_leave)
         #Botón Generar
-        self.boton_generar=tk.Button(self.opciones_frame,text="Generar Archivo Xml", bg='#4a6eb0', font=("Verdana", 13), bd=0, fg='white', activeforeground='black')
+        self.boton_generar=tk.Button(self.opciones_frame,text="Generar Archivo Xml", bg='#4a6eb0', font=("Verdana", 13), bd=0, fg='white', activeforeground='black', command=self.generar_xml)
         self.boton_generar.place(x=10,y=110, width=200)
         self.boton_generar.bind("<Enter>", self.on_enter)
         self.boton_generar.bind("<Leave>", self.on_leave)
@@ -210,14 +214,19 @@ class ventana_principal:
         self.caja_texto_mensaje = Entry(self.frame_gestion_mensaje)
         self.caja_texto_mensaje.config(font=("Verdana",11))
         self.caja_texto_mensaje.place(x=260, y=50, width=230, height=30)
-        #Boton Agregar
-        self.boton_seleccionar=tk.Button(self.frame_gestion_mensaje,text="Seleccionar Mensaje", bg='#4a6eb0', font=("Verdana", 11), bd=0, fg='white', activeforeground='black')
+        #Boton Seleccionar
+        self.boton_seleccionar=tk.Button(self.frame_gestion_mensaje,text="Mostrar Información Mensaje", bg='#4a6eb0', font=("Verdana", 10), bd=0, fg='white', activeforeground='black', command=lambda:self.mostrar_informacion_mensaje(self.caja_texto_mensaje))
         self.boton_seleccionar.place(x=510, y=50, width=230, height=30)
         self.boton_seleccionar.bind("<Enter>", self.on_enter)
         self.boton_seleccionar.bind("<Leave>", self.on_leave)
+        #Boton Graficar
+        self.boton_graficar=tk.Button(self.frame_gestion_mensaje,text="Gráficar Instrucciones Mensaje", bg='#4a6eb0', font=("Verdana", 10), bd=0, fg='white', activeforeground='black', command=lambda:self.graficar_instruccion_mensaje(self.caja_texto_mensaje))
+        self.boton_graficar.place(x=510, y=100, width=230, height=30)
+        self.boton_graficar.bind("<Enter>", self.on_enter)
+        self.boton_graficar.bind("<Leave>", self.on_leave)
         #Cuadro Texto
         self.cuadro_texto_mensaje = scrolledtext.ScrolledText(self.frame_gestion_mensaje, font=("Verdana", 10), bg="white", width=87, height=20)
-        self.cuadro_texto_mensaje.place(x=20, y=100)
+        self.cuadro_texto_mensaje.place(x=20, y=140)
         #Boton Mostrar
         self.boton_mostrar_mensaje=tk.Button(self.frame_gestion_mensaje,text="Ver Listado Mensajes", bg='#4a6eb0', font=("Verdana", 11), bd=0, fg='white', activeforeground='black', command=self.mostrar_lista_mensaje)
         self.boton_mostrar_mensaje.place(x=20, y=500, width=230, height=30)
@@ -241,6 +250,64 @@ class ventana_principal:
             messagebox.showinfo("Gestión De Mensajes", "Lista Mensajes Mostrada Correctamente")
         else:
             messagebox.showwarning("Error", "No existe Información Previa")
+
+    #Función Ver Información del Mensajes De Gestión De Mensaje
+    def mostrar_informacion_mensaje(self, caja_texto_mensaje):
+        #Se verifica que la lista esté llena
+        if lista_mensaje_recibido_general.cabeza is None:
+            messagebox.showwarning("Error ", "No existe Información Previa")
+            return
+        #Obtiene el nombre del mensaje desde la caja_texto
+        nombre_mensaje=caja_texto_mensaje.get()
+        #Variable Para Saber si el mensaje Existe
+        mensaje_existe=False
+        #Verifica si el nombre del mensaje es una cadena vacía
+        if nombre_mensaje == "":
+            messagebox.showwarning("Error", "Escribe El Nombre del Mensaje")
+        else:
+            # Itera a través de la lista mensaje para verificar si el mensaje existe
+            nodo_mensaje=lista_mensaje_recibido_general.cabeza
+            while nodo_mensaje is not None:
+                if nodo_mensaje.mensaje_recibido.nombre_mensaje == nombre_mensaje:
+                    mensaje_existe=True
+                    break
+                else:
+                    # Avanza al siguiente nodo en la lista
+                    nodo_mensaje = nodo_mensaje.siguiente
+            if mensaje_existe is True:
+                lista_mensaje_recibido_general.mostrar_mensajes_recibido_pantalla(nombre_mensaje,self.cuadro_texto_mensaje)
+                messagebox.showinfo("Gestión De Mensajes", "Información Mensaje Mostrada Correctamente")
+            else:
+                messagebox.showwarning("Error", f"El Mensaje '{nombre_mensaje}' no existe en la lista.")
+
+    #Función Ver Información del Mensajes De Gestión De Mensaje
+    def graficar_instruccion_mensaje(self, caja_texto_mensaje):
+        #Se verifica que la lista esté llena
+        if lista_mensaje_recibido_general.cabeza is None:
+            messagebox.showwarning("Error", "No existe Información Previa")
+            return
+        #Obtiene el nombre del mensaje desde la caja_texto
+        nombre_mensaje=caja_texto_mensaje.get()
+        #Variable Para Saber si el mensaje Existe
+        mensaje_existe=False
+        #Verifica si el nombre del mensaje es una cadena vacía
+        if nombre_mensaje == "":
+            messagebox.showwarning("Error", "Escribe El Nombre del Mensaje")
+        else:
+            # Itera a través de la lista mensaje para verificar si el mensaje existe
+            nodo_mensaje=lista_mensaje_recibido_general.cabeza
+            while nodo_mensaje is not None:
+                if nodo_mensaje.mensaje_recibido.nombre_mensaje == nombre_mensaje:
+                    mensaje_existe=True
+                    break
+                else:
+                    # Avanza al siguiente nodo en la lista
+                    nodo_mensaje = nodo_mensaje.siguiente
+            if mensaje_existe is True:
+                lista_mensaje_recibido_general.graficar_instruccion_mensaje(nombre_mensaje)
+                messagebox.showinfo("Gestión De Mensajes", "Instrucciones del Mensaje Gráficada Correctamente")
+            else:
+                messagebox.showwarning("Error", f"El Mensaje '{nombre_mensaje}' no existe en la lista.")
 
     #Contenedor Ayuda
     def mostrar_frame_ayuda(self):
@@ -289,16 +356,30 @@ class ventana_principal:
 
     #Funcion Abrir La Documentación Del Proyecto De Ayuda
     def abrir_documentacion_proyecto(self):
-        url = "https://www.facebook.com/?locale=es_LA" 
+        url = "https://github.com/manuelimal02/IPC2_Proyecto2_202201524/blob/main/documentaci%C3%B3n/%5BIPC2%5DEnsayo_202201524.pdf" 
         webbrowser.open(url)
 
+    #Función General: Inicialización Del Sistema
+    def inicializar(self):
+        self.mostrar_frame_principal()
+        if lista_drones_general.cabeza is not None and (lista_sistema_general.cabeza is not None or lista_mensaje_general is not None):
+            lista_drones_general.inicializar_lista_drones()
+            lista_sistema_general.inicializar_lista_sistema()
+            lista_mensaje_general.inicializar_lista_mensaje()
+            messagebox.showinfo("Inicializar Sistema", "Sistema Inicializado Correctamente")
+        else:
+            lista_drones_general.mostrar_drones()
+            lista_sistema_general.mostrar_sistema()
+            lista_mensaje_general.mostrar_mensaje()
+            messagebox.showwarning("Error", "No existe Información Previa")
 
+    #Función General: Cargar archivo XML de entrada
     def cargar_archivo(self):
-            self.mostrar_frame_principal()
-            ruta = tk.Tk()
-            ruta.withdraw()
-            ruta.attributes('-topmost', True)
-        #try:
+        self.mostrar_frame_principal()
+        ruta = tk.Tk()
+        ruta.withdraw()
+        ruta.attributes('-topmost', True)
+        try:
             ruta_archivo = filedialog.askopenfilename(filetypes=[("Archivos XML", f"*.xml")])
             with open(ruta_archivo, "r") as archivo:
                 tree = ET.parse(ruta_archivo)
@@ -309,7 +390,6 @@ class ventana_principal:
                     nombre_dron=nivel_drones.text
                     nuevo_dron=drones(nombre_dron)
                     lista_drones_general.insertar_dron(nuevo_dron)
-                #lista_drones_general.imprimir()
                 #Lista Sistema Drones
                 nivel_sistemas_drones = root.find('.//listaSistemasDrones')
                 for sistema_drones in nivel_sistemas_drones.findall('.//sistemaDrones'):
@@ -333,8 +413,7 @@ class ventana_principal:
                         lista_dron.insertar_dron(nuevo_dron)
                     nuevo_sistema=sistema(nombre_sistema, altura_maxima, cantidad_drones, lista_dron)
                     lista_sistema_general.insertar_sistema(nuevo_sistema)
-                #lista_sistema_general.mostrar_sistema()
-                # Encuentra la sección <listaMensajes>
+                #Lista Mensajes
                 lista_mensajes = root.find('.//listaMensajes')
                 for nivel_mensaje in lista_mensajes.findall('.//Mensaje'):
                     nombre_mensaje = nivel_mensaje.get('nombre') 
@@ -348,25 +427,23 @@ class ventana_principal:
                         altura_dron = nivel_instruccion.text
                         nueva_instruccion=instruccion(dron_instruccion, altura_dron)
                         lista_instruccion_temporal.insertar_instruccion(nueva_instruccion)
-
                     nuevo_mensaje=mensaje(nombre_mensaje, sistema_drones_mensaje, lista_instruccion_temporal)
                     lista_mensaje_general.insertar_mensaje(nuevo_mensaje)
-                #lista_mensaje_general.mostrar_mensaje()
                 self.desencriptar_lista_mensaje()
-
             messagebox.showinfo("Abrir", "Archivo Cargado Correctamente.")
-        #except Exception as e:
-            #messagebox.showerror("Error", f"No se ha seleccionado ningún archivo: {str(e)}")
-            #return
+        except Exception as e:
+            messagebox.showerror("Error", f"No se ha seleccionado ningún archivo: {str(e)}")
+            return
+
+    #Función para procesar todos los mensajes del archivo XML de entrada
     def desencriptar_lista_mensaje(self):
         nodo_mensaje = lista_mensaje_general.cabeza
         nodo_mensaje_variable = lista_mensaje_general.cabeza
-        
         #Variables Globales En La Función
         nombre_mensaje_recibido=""
-        nombre_sistema=""
-        mensaje_recibido=""
-
+        nombre_sistema_recibido=""
+        mensaje_recibido_des=""
+        tiempo_optimo_des=0
         while nodo_mensaje is not None:
             #Se Recorren Todos Los Mensajes
             while nodo_mensaje_variable is not None:
@@ -379,7 +456,7 @@ class ventana_principal:
                         #Si el nombre_sistema_dron de mensaje es igual al nombre sistema del sistema 
                         if nodo_mensaje.mensaje.nombre_sistema_dron == nodo_sistema.sistema.nombre_sistema:
                             #--Nombre Del Sistema
-                            nombre_sistema=nodo_sistema.sistema.nombre_sistema
+                            nombre_sistema_recibido=nodo_sistema.sistema.nombre_sistema
                             nodo_instruccion = nodo_mensaje.mensaje.lista_instruccion.cabeza
                             #Se recorren las instrucciones del mensaje actual
                             while nodo_instruccion is not None:
@@ -394,43 +471,89 @@ class ventana_principal:
                                             #Si la altura del Contenido es la misma que la altura de la instruccion
                                             if nodo_instruccion.instruccion.altura_dron == nodo_contenido.contenido.altura_dron:
                                                 #--Mensaje Recibido
-                                                mensaje_recibido+=nodo_contenido.contenido.simbolo_altura
+                                                mensaje_recibido_des+=nodo_contenido.contenido.simbolo_altura
                                             nodo_contenido=nodo_contenido.siguiente
                                         break #Se rompe la iteracion del dron
+                                    #Si el nombre no es igual, se pasa el siguientre dron
                                     else:
                                         nodo_dron = nodo_dron.siguiente
+                                #Se pasa la siguiente instrucción
                                 nodo_instruccion = nodo_instruccion.siguiente
+                            #Se crea un nodo dron para recorrer todos los drones del sistema
+                            nodo_dron_tiempo=nodo_sistema.sistema.lista_dron.cabeza
+                            #Se crea una lista temporal dron recibido
+                            lista_dron_recibido_temporal=lista_doble_dron_recibido()
+                            #Se recorre cada dron del sistema
+                            while nodo_dron_tiempo is not None:
+                                #--Nombre Dron Recibido
+                                nombre_dron=nodo_dron_tiempo.dron.nombre_dron
+                                #Contador para saber el segundo
+                                tiempo_optimo=1
+                                #Se crea un nodo instrucción para recorrer todas las instrucciones
+                                nodo_instruccion_mensaje=nodo_mensaje.mensaje.lista_instruccion.cabeza
+                                #Se crea una lista instrucción dron temporal
+                                lista_instruccion_dron_temporal=lista_doble_instruccion_dron()
+                                #Se recorre cada instrucción del sistema
+                                while nodo_instruccion_mensaje is not None:
+                                    #Si el nombre del dron de la instrucción es igual al nombre dron del dron actual
+                                    if nodo_instruccion_mensaje.instruccion.nombre_dron == nodo_dron_tiempo.dron.nombre_dron:
+                                        #Se inserta una nueva instrucción en el segundo actual
+                                        accion="Emitir Luz"
+                                        #Se crea una nueva instrucción dron y se inserta en la lista temporal
+                                        nueva_instruccion_dron=instruccion_dron(tiempo_optimo, accion)
+                                        lista_instruccion_dron_temporal.insertar_instruccion_dron(nueva_instruccion_dron)
+                                    #Si el nombre del dron de la instrucción no es igual al nombre dron del dron actual
+                                    elif nodo_instruccion_mensaje.instruccion.nombre_dron != nodo_dron_tiempo.dron.nombre_dron:
+                                        #Se inserta una nueva instrucción en el segundo actual
+                                        accion="Esperar"
+                                        #Se crea una nueva instrucción dron y se inserta en la lista temporal
+                                        nueva_instruccion_dron=instruccion_dron(tiempo_optimo, accion)
+                                        lista_instruccion_dron_temporal.insertar_instruccion_dron(nueva_instruccion_dron)
+                                    #Se aumenta el contador del segundo
+                                    tiempo_optimo+=1
+                                    #Se Pasa a la siguiente instrucción
+                                    nodo_instruccion_mensaje=nodo_instruccion_mensaje.siguiente
+                                #Se crea un nuevo dron recibido y se inserta en la lista
+                                nuevo_don_recibido=dron_recibido(nombre_dron,lista_instruccion_dron_temporal)
+                                lista_dron_recibido_temporal.insertar_dron_recibido(nuevo_don_recibido)
+                                #Se reinicia el contador del segundo actual
+                                tiempo_optimo=1
+                                #Se pasa al siguiente dron
+                                nodo_dron_tiempo=nodo_dron_tiempo.siguiente
+                            #Se recorre cada instrucción del sistema
+                            nodo_instruccion_tiempo=nodo_mensaje.mensaje.lista_instruccion.cabeza
+                            #Se recore la lista de instrucciones
+                            while nodo_instruccion_tiempo is not None:
+                                #Se aumenta en 1 el tiempo por cada instruccón
+                                tiempo_optimo_des+=1
+                                #Se pasa a la siguiente instrucción
+                                nodo_instruccion_tiempo=nodo_instruccion_tiempo.siguiente
+                            #Se crea un nuevo mensaje recibido y se inserta en la lista
+                            nuevo_mensaje_recibido=mensaje_recibido(nombre_mensaje_recibido, nombre_sistema_recibido, tiempo_optimo_des, mensaje_recibido_des, lista_dron_recibido_temporal)
+                            lista_mensaje_recibido_general.insertar_mensaje_recibido(nuevo_mensaje_recibido) 
+                            #Se reinicia la cadena y los contadores
+                            mensaje_recibido_des=""
+                            tiempo_optimo_des=0
                             break #Se Rompre La Iteracion Del Sistema
                         else:
+                            #Se pasa al siguiente sistema
                             nodo_sistema=nodo_sistema.siguiente
-                    
-                    print("--------")
-                    print(nombre_mensaje_recibido)
-                    print(nombre_sistema)
-                    print(mensaje_recibido)
-                    mensaje_recibido=""
-                    print("--------")
                     break #Se Rompre La Iteración Del Mensaje
                 else:
+                    #Se pasa al siguiente mensaje
                     nodo_mensaje_variable=nodo_mensaje_variable.siguiente
-
+            #Se pasa al siguiente mensaje
             nodo_mensaje=nodo_mensaje.siguiente
 
-
-
-    def inicializar(self):
-        self.mostrar_frame_principal()
-        if lista_drones_general.cabeza is not None and (lista_sistema_general.cabeza is not None or lista_mensaje_general is not None):
-            lista_drones_general.inicializar_lista_drones()
-            lista_sistema_general.inicializar_lista_sistema()
-            lista_mensaje_general.inicializar_lista_mensaje()
-            messagebox.showinfo("Inicializar Sistema", "Sistema Inicializado Correctamente")
-        else:
-            lista_drones_general.mostrar_drones()
-            lista_sistema_general.mostrar_sistema()
-            lista_mensaje_general.mostrar_mensaje()
+    #Función General: Generar archivo XML de salida
+    def generar_xml(self):
+        if lista_mensaje_recibido_general.cabeza is None:
             messagebox.showwarning("Error", "No existe Información Previa")
+            return
+        lista_mensaje_recibido_general.escribir_archivo_salida()
+        messagebox.showinfo("Generar Archivo XML", "Archivo Xml Generado Correctamente")
 
+    #Función General: Ver gráficamente listado de sistemas de drones
     def graficar_sistema_de_drones(self):
         self.mostrar_frame_principal()
         nodo_sistema = lista_sistema_general.cabeza
@@ -440,6 +563,7 @@ class ventana_principal:
         else:
             messagebox.showwarning("Error", "No existe Información Previa")
 
+    #Función General: Salir
     def salir(self):
         try:
             messagebox.showinfo("Salir", "Gracias por utilizar el programa.")
@@ -447,6 +571,7 @@ class ventana_principal:
         except Exception as e:
             messagebox.showerror("Error", f"Se ha producido un error.: {str(e)}")
 
+    #Función General: Centrar Ventana Principal
     def centrar_ventana(self):
         self.root.update_idletasks()
         ancho_ventana = self.root.winfo_width()
