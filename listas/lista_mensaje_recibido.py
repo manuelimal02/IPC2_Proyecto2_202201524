@@ -71,13 +71,13 @@ class lista_doble_mensaje_recibido:
                 mensaje_recibido=actual.mensaje_recibido.mensaje_recibido
                 f = open(nombre_mensaje_recibido+'.dot','w')
                 texto="""
-                    digraph G {bgcolor="#0000FF44:#FF000044" gradientangle=90
+                    digraph G {bgcolor="#0000FF44:#FF000044" gradientangle=90 label=" """+nombre_mensaje_recibido+""""
                     subgraph cluster_0 {fillcolor="cyan:blue" style="filled" gradientangle="270"
-                        node [ style=filled,shape="box",fillcolor="cyan" ]"Mensaje A Enviar: """+mensaje_recibido+"""";
-                        node [ style=filled,shape="box",fillcolor="cyan" ]"Tiempo Optimo: """+str(tiempo_optimo)+"""";
-                        node [ style=filled,shape="box",fillcolor="cyan" ]"Sistema Dron: """+nombre_sistema_dron+"""";
-                        node [ style=filled,shape="box",fillcolor="cyan" ]"Nombre Mensaje: """+nombre_mensaje+"""";
-                        label=" """+nombre_mensaje_recibido+""""
+                        style=invis;
+                        node [ style=filled,shape="box",fillcolor="cyan:blue" ]"Mensaje A Enviar: """+mensaje_recibido+"""";
+                        node [ style=filled,shape="box",fillcolor="cyan:blue" ]"Tiempo Optimo: """+str(tiempo_optimo)+"""";
+                        node [ style=filled,shape="box",fillcolor="cyan:blue" ]"Sistema Dron: """+nombre_sistema_dron+"""";
+                        node [ style=filled,shape="box",fillcolor="cyan:blue" ]"Nombre Mensaje: """+nombre_mensaje+"""";
                         }
                     a0 [shape=none label=<
                     <TABLE border="0" cellspacing="10" cellpadding="10">\n
@@ -151,7 +151,7 @@ class lista_doble_mensaje_recibido:
         datos=str(datos)
         self.xml_identado(respuesta)
         arbol_xml=ET.ElementTree(respuesta)
-        arbol_xml.write("xml_Salida.xml",encoding="UTF-8",xml_declaration=True)
+        arbol_xml.write("SALIDA_MENSAJES.xml",encoding="UTF-8",xml_declaration=True)
 
     def xml_identado(self, element, indent='  '):
     # Esta función puede utilizarse para obtener la indentación adecuada en el XML.

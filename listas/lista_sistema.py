@@ -46,11 +46,11 @@ class lista_doble_sistema:
             cantidad=actual.sistema.cantidad_drones
             f = open(nombre+'.dot','w')
             texto="""
-                digraph G {bgcolor="#0000FF44:#FF000044" gradientangle=90
+                digraph G {bgcolor="#0000FF44:#FF000044" gradientangle=90 label=" """+nombre+""""
                 subgraph cluster_0 {fillcolor="cyan:blue" style="filled" gradientangle="270"
-                    node [ style=filled,shape="box",fillcolor="cyan" ]"Altura Maxima: """+altura+"""";
-                    node [ style=filled,shape="box",fillcolor="cyan" ]"Cantidad Drones: """+cantidad+"""";
-                    label=" """+nombre+""""
+                    style=invis;
+                    node [ style=filled,shape="box",fillcolor="cyan:blue" ]"Altura Maxima: """+altura+"""";
+                    node [ style=filled,shape="box",fillcolor="cyan:blue" ]"Cantidad Drones: """+cantidad+"""";
                     }
                 a0 [shape=none label=<
                 <TABLE border="0" cellspacing="10" cellpadding="10">\n
@@ -76,7 +76,7 @@ class lista_doble_sistema:
             f.write(texto)
             f.close()
             os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin'
-            os.system(f'dot -Tpdf {nombre}.dot -o sistema_dron_{nombre}.pdf')
+            os.system(f'dot -Tpdf {nombre}.dot -o {nombre}.pdf')
             actual=actual.siguiente
 
             
